@@ -6,6 +6,7 @@ exceptions.py
 Created by Christian Klein on 2011-05-16.
 Copyright (c) 2011 HUDORA GmbH. All rights reserved.
 """
+from __future__ import unicode_literals
 
 
 class WrongStatusCode(RuntimeError):

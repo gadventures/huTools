@@ -4,6 +4,7 @@
 """
 Copyright (c) 2007, 2015 HUDORA GmbH. BSD Licensed.
 """
+from __future__ import unicode_literals
 
 import doctest
 import string
@@ -52,9 +53,9 @@ def deUmlaut(data):
 
     try:
         return data.encode('ascii', 'replace')
-    except UnicodeEncodeError, msg:
+    except UnicodeEncodeError as msg:
         raise ValueError('%s: %r' % (msg, data))
-    except UnicodeDecodeError, msg:
+    except UnicodeDecodeError as msg:
         raise ValueError('%s: %r' % (msg, data))
 
 

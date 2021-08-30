@@ -6,8 +6,10 @@ tools.py - various helpers for HTTP access
 Created by Maximillian Dornseif on 2010-10-24.
 Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import base64
-import poster_encode
+from . import poster_encode
 import urllib
 import urlparse
 

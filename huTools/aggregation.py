@@ -6,6 +6,7 @@ aggregation.py - implement things similar to "group by" in SQL.
 Created by Maximillian Dornseif on 2010-03-07.
 Copyright (c) 2010, 2011, 2012 HUDORA. All rights reserved.
 """
+from __future__ import unicode_literals
 
 
 from huTools.calendar.tools import date_trunc

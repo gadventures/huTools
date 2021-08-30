@@ -8,8 +8,10 @@ Based on pytohn-postmark (C) 2009-2010 David Martorana, Wildbit LLC, Python Soft
 Created by Maximillian Dornseif on 2010-09-27.
 Copyright (c) 2010 HUDORA. All rights reserved.
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import email.utils
-import hujson2
+from . import hujson2
 import logging
 import unittest
 import urllib2
@@ -108,7 +110,7 @@ def send_mail(message, api_key=None):
             return True
         else:
             raise RuntimeError('Postmark Return code %d: %s' % (result.code, result.msg))
-    except urllib2.HTTPError, err:
+    except urllib2.HTTPError as err:
         if err.code == 401:
             raise RuntimeError('Sending Unauthorized - incorrect API key.', err)
         elif err.code == 422:
@@ -121,7 +123,7 @@ def send_mail(message, api_key=None):
             raise PMUnprocessableEntity(desc)
         elif err.code == 500:
             raise RuntimeError('Internal server error at Postmark. Admins have been alerted.', err)
-    except urllib2.URLError, err:
+    except urllib2.URLError as err:
         if hasattr(err, 'reason'):
             raise RuntimeError(("URLError: Failed to reach the server: %s (See 'inner_exception' for"
                                 " details)") % err.reason, err)

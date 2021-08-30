@@ -6,6 +6,7 @@ Client library for REST APIs
 Created by Christian Klein on 2010-07-21.
 Copyright (c) 2010 HUDORA. All rights reserved.
 """
+from __future__ import unicode_literals
 
 from huTools.http import fetch
 import os

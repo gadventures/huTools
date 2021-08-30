@@ -6,6 +6,7 @@ test.py
 Created by Maximillian Dornseif on 2010-10-24.
 Copyright (c) 2010 HUDORA. All rights reserved.
 """
+from __future__ import unicode_literals
 
 import unittest
 from huTools.http import fetch

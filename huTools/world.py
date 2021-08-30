@@ -11,6 +11,7 @@ COUNTRIES = ['DE', 'AT', ...]
 Created by Maximillian Dornseif on 2007-05-01.
 Copyright (c) 2007, 2010 HUDORA GmbH. BSD Licensed.
 """
+from __future__ import unicode_literals
 
 import doctest
 import sys

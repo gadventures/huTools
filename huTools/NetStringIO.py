@@ -15,6 +15,8 @@ Bonn, Germany. The twisd AG kindly donated it as Freie Software.
 
 
 """
+from __future__ import print_function
+from __future__ import unicode_literals
 
 __version__ = '$Id: NetStringIO.py,v 1.5 2001/05/03 22:05:57 drt Exp$'
 
@@ -144,20 +146,20 @@ def test():
     inf = StringIO.StringIO()
     outf = StringIO.StringIO()
 
-    print "Writing a Netstring ... ",
+    print("Writing a Netstring ... ", end=' ')
     f = NetStringIO(outf)
     f.write(testtext)
-    print outf.getvalue(),
+    print(outf.getvalue(), end=' ')
 
     inf = StringIO.StringIO(outf.getvalue())
     f.close()
 
-    print "Reading this Netstring ... ",
+    print("Reading this Netstring ... ", end=' ')
 
     fz = NetStringIO(inf)
     ret = fz.read()
     assert ret == testtext, "String is different after reading"
-    print ret
+    print(ret)
     fz.close()
 
 if __name__ == '__main__':

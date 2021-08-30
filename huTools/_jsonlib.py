@@ -19,6 +19,8 @@ The main implementation of this module is accessed through calls to
 ``read()`` and ``write()``. See their documentation for details.
 
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
 __author__ = "John Millikin <jmillikin@gmail.com>"
 __version__ = (1, 6, 1)
 __license__ = "GPL"
@@ -635,7 +637,7 @@ class Serializer(object):
                 # encoded.
                 if 0xD800 <= ochar <= 0xDBFF:
                     try:
-                        nextc = stream.next()
+                        nextc = next(stream)
                     except StopIteration:
                         self.raise_.incomplete_surrogate()
                     onext = ord(nextc)
@@ -839,6 +841,6 @@ def validate_on_unknown(f):
 # }}}
 
 try:
-    from _jsonlib import read_impl, write_impl, dump_impl
+    from ._jsonlib import read_impl, write_impl, dump_impl
 except ImportError:
     pass

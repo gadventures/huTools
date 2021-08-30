@@ -6,6 +6,7 @@ tools.py - Functions for date manipulation
 Created by Christian Klein on 2010-04-22.
 Copyright (c) 2010, 2012 HUDORA GmbH. All rights reserved.
 """
+from __future__ import unicode_literals
 
 import calendar
 import datetime

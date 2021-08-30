@@ -8,6 +8,7 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 """
 
 from __future__ import with_statement
+from __future__ import unicode_literals
 import huTools.http
 import huTools.hujson2 as json
 import mimetypes

@@ -35,6 +35,8 @@ The hard part of reindenting is figuring out what to do with comment
 lines.  So long as the input files get a clean bill of health from
 tabnanny.py, reindent should do a good job.
 """
+from __future__ import print_function
+from __future__ import unicode_literals
 
 __version__ = "1"
 
@@ -50,8 +52,8 @@ no_backup = 0
 
 def usage(msg=None):
     if msg is not None:
-        print >> sys.stderr, msg
-    print >> sys.stderr, __doc__
+        print(msg, file=sys.stderr)
+    print(__doc__, file=sys.stderr)
 
 
 def errprint(*args):
@@ -70,7 +72,7 @@ def main():
         opts, args = getopt.getopt(sys.argv[1:], "drvhB",
                                    ["dryrun", "recurse", "verbose", "help",
                                     "no-backup"])
-    except getopt.error, msg:
+    except getopt.error as msg:
         usage(msg)
         return
     for o, a in opts:
@@ -97,7 +99,7 @@ def main():
 def check(file):
     if os.path.isdir(file) and not os.path.islink(file):
         if verbose:
-            print "listing directory", file
+            print("listing directory", file)
         names = os.listdir(file)
         for name in names:
             fullname = os.path.join(file, name)
@@ -108,10 +110,10 @@ def check(file):
         return
 
     if verbose:
-        print "checking", file, "...",
+        print("checking", file, "...", end=' ')
     try:
         f = open(file)
-    except IOError, msg:
+    except IOError as msg:
         errprint("%s: I/O Error: %s" % (file, str(msg)))
         return
 
@@ -119,11 +121,11 @@ def check(file):
     f.close()
     if r.run():
         if verbose:
-            print "changed."
+            print("changed.")
             if dryrun:
-                print "But this is a dry run, so leaving it alone."
+                print("But this is a dry run, so leaving it alone.")
         else:
-            print "reindented", file, (dryrun and "(dry run => not really)" or "")
+            print("reindented", file, (dryrun and "(dry run => not really)" or ""))
         if not dryrun:
             if not no_backup:
                 bak = file + ".bak"
@@ -131,15 +133,15 @@ def check(file):
                     os.remove(bak)
                 os.rename(file, bak)
                 if verbose:
-                    print "renamed", file, "to", bak
+                    print("renamed", file, "to", bak)
             f = open(file, "w")
             r.write(f)
             f.close()
             if verbose:
-                print "wrote new", file
+                print("wrote new", file)
     else:
         if verbose:
-            print "unchanged."
+            print("unchanged.")
 
 
 class Reindenter:
@@ -247,13 +249,14 @@ class Reindenter:
         return line
 
     # Line-eater for tokenize.
-    def tokeneater(self, type, token, (sline, scol), end, line,
+    def tokeneater(self, type, token, xxx_todo_changeme, end, line,
                    INDENT=tokenize.INDENT,
                    DEDENT=tokenize.DEDENT,
                    NEWLINE=tokenize.NEWLINE,
                    COMMENT=tokenize.COMMENT,
                    NL=tokenize.NL):
 
+        (sline, scol) = xxx_todo_changeme
         if type == NEWLINE:
             # A program statement, or ENDMARKER, will eventually follow,
             # after some (possibly empty) run of tokens of the form

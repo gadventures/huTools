@@ -26,6 +26,7 @@ Authors:
 This Software was written by md@hudora.de for the twisd AG,
 Bonn, Germany. The twisd AG kindly donated it as Freie Software.
 """
+from __future__ import unicode_literals
 
 __version__ = '$Id$'
 

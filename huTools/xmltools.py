@@ -6,6 +6,7 @@ xmltools.py
 Created by Christian Klein on 2010-02-26.
 Copyright (c) 2010 HUDORA GmbH. All rights reserved.
 """
+from __future__ import unicode_literals
 
 import datetime
 import xml.etree.ElementTree as ET

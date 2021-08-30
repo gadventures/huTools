@@ -6,13 +6,15 @@ decorators.py
 Created by Maximillian Dornseif on 2007-05-10.
 Copyright (c) 2007, 2015 HUDORA GmbH. All rights reserved.
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import cPickle as pickle
 import functools
 import hashlib
 import threading
 import time
 
-from _decorator import decorator
+from ._decorator import decorator
 from collections import namedtuple
 from functools import update_wrapper
 

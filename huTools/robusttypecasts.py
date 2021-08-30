@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """Module for robust typecasts."""
+from __future__ import unicode_literals
 
 from types import ListType, TupleType
 import doctest

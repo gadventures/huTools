@@ -5,6 +5,9 @@ structured.py - handle structured data/dicts/objects
 Created by Maximillian Dornseif on 2009-12-27.
 Copyright (c) 2009-2011, 2015 HUDORA. All rights reserved.
 """
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import csv
 import xml.etree.cElementTree as ET
 from StringIO import StringIO
@@ -423,7 +426,7 @@ def dict2csv(data, datanodename='objects'):
 
 def list2xls(datalist):
     """Export a list of dicts to XLS."""
-    import structured_xls
+    from . import structured_xls
     data = x2tabular(datalist)
     writer = structured_xls.XLSwriter()
     for row in data:
@@ -490,6 +493,6 @@ if __name__ == '__main__':
     failure_count, test_count = doctest.testmod()
     test1()
     test2()
-    print timeit.timeit('test1()', setup="from __main__ import test1", number=1000)
+    print(timeit.timeit('test1()', setup="from __main__ import test1", number=1000))
     cProfile.run('test1()')
     sys.exit(failure_count)

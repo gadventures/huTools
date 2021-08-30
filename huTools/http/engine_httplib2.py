@@ -6,6 +6,7 @@ engine_httplib2.py implements httplib2 based queries for huTools.http
 Created by Maximillian Dornseif on 2010-10-24.
 Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
+from __future__ import unicode_literals
 
 import socket
 import huTools.http.tools

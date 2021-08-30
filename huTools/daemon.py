@@ -6,6 +6,7 @@ daemon.py
 Created by Maximillian Dornseif on 2009-08-26.
 Copyright (c) 2009 HUDORA. All rights reserved.
 """
+from __future__ import unicode_literals
 
 
 import os
@@ -59,7 +60,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
         # and inherits the parent's process group ID. This step is required
         # to ensure that the next call to os.setsid is successful.
         pid = os.fork()
-    except OSError, e:
+    except OSError as e:
         raise RuntimeError("%s [%d]" % (e.strerror, e.errno))
 
     if (pid == 0):  # The first child.
@@ -107,7 +108,7 @@ def daemonize(pidfile=None, stdoutlogfile=None):
             # longer a session leader, preventing the daemon from ever acquiring
             # a controlling terminal.
             pid = os.fork()  # Fork a second child.
-        except OSError, e:
+        except OSError as e:
             raise RuntimeError("%s [%d]" % (e.strerror, e.errno))
 
         if (pid == 0):  # The second child.

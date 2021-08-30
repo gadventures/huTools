@@ -15,6 +15,7 @@ See [shortuuid](https://github.com/stochastic-technologies/shortuuid) for an alt
 
 Created by Maximillian Dornseif on 2006-11-08. BSD Licensed.
 """
+from __future__ import unicode_literals
 
 import base64
 import hashlib

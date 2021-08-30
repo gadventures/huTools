@@ -8,6 +8,7 @@ THIS IS NOT INDUSTRIAL-STRENGTH CRYPTO - use OpenSSL abd friends if you need rea
 Created by Maximillian Dornseif on 2009-08-31.
 Copyright (c) 2009 HUDORA. All rights reserved.
 """
+from __future__ import unicode_literals
 
 import sys
 import random

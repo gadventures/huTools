@@ -9,6 +9,7 @@ AppEngine capabilities.
 Created by Maximillian Dornseif on 2010-10-24.
 Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
+from __future__ import unicode_literals
 
 
 import huTools.http.tools
@@ -56,7 +57,7 @@ def request(url, method, content, headers, timeout=50, caching=None):
     try:
         result = urlfetch.fetch(url=url, deadline=timeout, payload=content,
                                 method=method, headers=headers)
-    except urlfetch_errors.DownloadError, exception:
+    except urlfetch_errors.DownloadError as exception:
         # App Engine uses the same exception class for several types of errors.
         # It seems that the only mean to distinguish timeouts from other errors
         # is by looking at the error message.

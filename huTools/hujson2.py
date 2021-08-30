@@ -8,6 +8,7 @@ hujson can encode additional types like decimal and datetime into valid json.
 Created by Maximillian Dornseif on 2010-09-10.
 Copyright (c) 2010, 2012, 2013 HUDORA. All rights reserved.
 """
+from __future__ import unicode_literals
 import datetime
 import decimal
 import json

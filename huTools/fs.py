@@ -6,6 +6,7 @@ fs.py filesystem-related functions
 Created by Maximillian Dornseif on 2008-08-16.
 Copyright (c) 2008 HUDORA. Consider it BSD Licensed.
 """
+from __future__ import unicode_literals
 
 import os
 

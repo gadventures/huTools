@@ -7,7 +7,9 @@ Created by Maximillian Dornseif on 2009-02-15.
 Copyright (c) 2009 HUDORA. All rights reserved.
 parts based on http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/84317
 """
+from __future__ import unicode_literals
 
+from future.utils import raise_
 import copy
 import logging
 import sys
@@ -53,7 +55,7 @@ class Future:
         # We deepcopy __result to prevent accidental tampering with it.
         ret = copy.deepcopy(self.__result)
         if self.__excpt:
-            raise self.__excpt[0], self.__excpt[1], self.__excpt[2]
+            raise_(self.__excpt[0], self.__excpt[1], self.__excpt[2])
         waitend = time.time()
         if waitend - waitstart > 1:
             logging.debug("waited %.1f s for %s", waitend - waitstart, self.__namecache)

@@ -6,6 +6,7 @@ workdays.py - calculate the number of workdays between two datetime objects.
 Created by Christian Klein on 2006-11-28. Fiddeled with by Maximillian Dornseif.
 BSD Licensed.
 """
+from __future__ import unicode_literals
 
 import datetime
 import doctest

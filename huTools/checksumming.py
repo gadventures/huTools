@@ -8,6 +8,7 @@ Created by Maximillian Dornseif on 2006-11-05.
 
 This file can be used under an BSD License.
 """
+from __future__ import unicode_literals
 
 # The original EAN code came from QBasic code I written from the EAN-Spec in 1986 or so.
 # The Python code was inspired by bookland.py and was extended to "longer than EAN"

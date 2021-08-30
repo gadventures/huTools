@@ -39,6 +39,7 @@ Minor modifications made by Mario Vilas (http://breakingcode.wordpress.com/)
 mainly to merge bug fixes found in Sourceforge
 
 """
+from __future__ import unicode_literals
 
 import base64
 import socket

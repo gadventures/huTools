@@ -6,6 +6,7 @@ monetary.py
 Created by Christian Klein on 2010-03-25.
 Copyright (c) 2010 Christian Klein. All rights reserved.
 """
+from __future__ import unicode_literals
 
 import decimal
 

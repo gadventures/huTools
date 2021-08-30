@@ -10,10 +10,12 @@ https://launchpad.net/jsonlib
 Created by Maximillian Dornseif on 2010-09-10.
 Copyright (c) 2010 HUDORA. All rights reserved.
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 
-from _jsonlib import UnknownSerializerError
-import _jsonlib
+from ._jsonlib import UnknownSerializerError
+from . import _jsonlib
 import datetime
 
 

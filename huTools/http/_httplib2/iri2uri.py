@@ -4,6 +4,7 @@ iri2uri
 Converts an IRI to a URI.
 
 """
+from __future__ import unicode_literals
 __author__ = "Joe Gregorio (joe@bitworking.org)"
 __copyright__ = "Copyright 2006, Joe Gregorio"
 __contributors__ = []

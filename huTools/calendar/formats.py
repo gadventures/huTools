@@ -6,6 +6,7 @@ formats.py - formating and parsing of timestamps.
 Created by Maximillian Dornseif on 2007-06-24.
 Copyright (c) 2007, 2010 HUDORA GmbH. All rights reserved.
 """
+from __future__ import unicode_literals
 
 import unittest
 import datetime

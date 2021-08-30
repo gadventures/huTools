@@ -21,5 +21,6 @@ File Upload just works::
 `fetch2xx()` throws a `WrongStatusCode` if the server returns a status code outside the 200-299 range.
 `fetch_json2xx()` in addition decodes a JSON reply and returns that.
 """
+from __future__ import unicode_literals
 
 from huTools.http.base import *

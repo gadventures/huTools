@@ -24,6 +24,8 @@ File Upload just works::
 Created by Maximillian Dornseif on 2010-10-24.
 Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import cgi
 import logging
 
@@ -36,11 +38,11 @@ from huTools.http import tools
 request = None
 engine = None
 try:
-    import engine_appengine
+    from . import engine_appengine
     request = engine_appengine.request
     AsyncHttpResult = engine_appengine.AsyncHttpResult
 except ImportError:
-    import engine_httplib2
+    from . import engine_httplib2
     request = engine_httplib2.request
     AsyncHttpResult = engine_httplib2.AsyncHttpResult
 
