@@ -8,6 +8,7 @@ Copyright (c) 2010 Christian Klein. All rights reserved.
 """
 from __future__ import unicode_literals
 
+from builtins import str
 from string import ascii_uppercase
 
 

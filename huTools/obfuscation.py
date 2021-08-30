@@ -10,11 +10,15 @@ Copyright (c) 2009 HUDORA. All rights reserved.
 """
 from __future__ import unicode_literals
 
+from builtins import str
+from builtins import chr
+from builtins import range
+from builtins import object
 import sys
 import random
 
 
-class RC4:
+class RC4(object):
     """RC4 en-/decription.
 
     Based on code from Thomas Dixon at http://www.macshadows.com/forums/index.php?showtopic=5766

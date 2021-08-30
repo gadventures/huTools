@@ -7,8 +7,12 @@ Created by Maximillian Dornseif on 2014-02-24.
 Copyright (c) 2014, 2015 HUDORA. All rights reserved.
 """
 from __future__ import unicode_literals
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import datetime
-from cStringIO import StringIO
+from io import StringIO
 from xlwt import Workbook, XFStyle
 
 
@@ -35,9 +39,9 @@ class XLSwriter(object):
             if isinstance(coldata, (datetime.datetime, datetime.date, datetime.time)):
                 self.sheet.write(self.rownum, col, coldata, datestyle)
             else:
-                if len(unicode(coldata)) > 8192:
+                if len(str(coldata)) > 8192:
                     # übergroße Felder RADIKAL verkürzen
-                    self.sheet.write(self.rownum, col, "%s ..." % unicode(coldata)[:64])
+                    self.sheet.write(self.rownum, col, "%s ..." % str(coldata)[:64])
                 else:
                     self.sheet.write(self.rownum, col, coldata)
             col += 1

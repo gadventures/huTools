@@ -35,6 +35,13 @@ number of extras (e.g., code syntax coloring, footnotes) as described on
 from __future__ import print_function
 from __future__ import unicode_literals
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import hex
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 cmdln_desc = """A fast and complete Python implementation of Markdown, a
 text-to-HTML conversion tool for web writers.
 
@@ -90,7 +97,7 @@ except ImportError:
 import optparse
 from random import random, randint
 import codecs
-from urllib import quote
+from urllib.parse import quote
 
 
 
@@ -102,7 +109,7 @@ if sys.version_info[:2] < (2,4):
         for i in sequence[::-1]:
             yield i
     def _unicode_decode(s, encoding, errors='xmlcharrefreplace'):
-        return unicode(s, encoding, errors)
+        return str(s, encoding, errors)
 else:
     def _unicode_decode(s, encoding, errors='strict'):
         return s.decode(encoding, errors)
@@ -251,9 +258,9 @@ class Markdown(object):
 
         if not text:
             text = u''
-        if not isinstance(text, unicode):
+        if not isinstance(text, str):
             #TODO: perhaps shouldn't presume UTF-8 for string input?
-            text = unicode(text, 'utf-8')
+            text = str(text, 'utf-8')
 
         if self.use_file_vars:
             # Look for emacs-style file variable hints.
@@ -436,7 +443,7 @@ class Markdown(object):
                         emacs_vars[variable] = value
 
         # Unquote values.
-        for var, val in emacs_vars.items():
+        for var, val in list(emacs_vars.items()):
             if len(val) > 1 and (val.startswith('"') and val.endswith('"')
                or val.startswith('"') and val.endswith('"')):
                 emacs_vars[var] = val[1:-1]
@@ -918,7 +925,7 @@ class Markdown(object):
         return ''.join(tokens)
 
     def _unhash_html_spans(self, text):
-        for key, sanitized in self.html_spans.items():
+        for key, sanitized in list(self.html_spans.items()):
             text = text.replace(key, sanitized)
         return text
 
@@ -1702,7 +1709,7 @@ class Markdown(object):
         return text
 
     def _encode_backslash_escapes(self, text):
-        for ch, escape in self._escape_table.items():
+        for ch, escape in list(self._escape_table.items()):
             text = text.replace("\\"+ch, escape)
         return text
 
@@ -1777,13 +1784,13 @@ class Markdown(object):
                 hash = _hash_text(link)
                 link_from_hash[hash] = link
                 text = text[:start] + hash + text[end:]
-        for hash, link in link_from_hash.items():
+        for hash, link in list(link_from_hash.items()):
             text = text.replace(hash, link)
         return text
 
     def _unescape_special_chars(self, text):
         # Swap back in all the special characters we've hidden.
-        for ch, hash in self._escape_table.items():
+        for ch, hash in list(self._escape_table.items()):
             text = text.replace(hash, ch)
         return text
 
@@ -1809,7 +1816,7 @@ class MarkdownWithExtras(Markdown):
 
 #---- internal support functions
 
-class UnicodeWithAttrs(unicode):
+class UnicodeWithAttrs(str):
     """A subclass of unicode used for the return value of conversion to
     possibly attach some attributes. E.g. the "toc_html" attribute when
     the "toc" extra is used.
@@ -1864,7 +1871,7 @@ def _slugify(value):
     if isinstance(value, str):
         value = value.decode('utf-8', 'ignore')
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
-    value = unicode(_slugify_strip_re.sub('', value).strip().lower())
+    value = str(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
 ## end of http://code.activestate.com/recipes/577257/ }}}
 
@@ -1902,7 +1909,7 @@ def _regex_from_encoded_pattern(s):
             except KeyError:
                 raise ValueError("unsupported regex flag: '%s' in '%s' "
                                  "(must be one of '%s')"
-                                 % (char, s, ''.join(flag_from_char.keys())))
+                                 % (char, s, ''.join(list(flag_from_char.keys()))))
         return re.compile(s[1:idx], flags)
     else: # not an encoded regex
         return re.compile(re.escape(s))

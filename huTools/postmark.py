@@ -10,11 +10,13 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 """
 from __future__ import absolute_import
 from __future__ import unicode_literals
+from future import standard_library
+standard_library.install_aliases()
 import email.utils
 from . import hujson2
 import logging
 import unittest
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 
 __POSTMARK_URL__ = 'http://api.postmarkapp.com/'
@@ -92,7 +94,7 @@ def send_mail(message, api_key=None):
         message['Attachments'] = attachments
 
     # Set up the url Request
-    req = urllib2.Request(
+    req = urllib.request.Request(
         __POSTMARK_URL__ + 'email',
         hujson2.dumps(message),
         {
@@ -104,13 +106,13 @@ def send_mail(message, api_key=None):
 
     logging.debug('Accessing %semail' % __POSTMARK_URL__)
     try:
-        result = urllib2.urlopen(req)
+        result = urllib.request.urlopen(req)
         result.close()
         if result.code == 200:
             return True
         else:
             raise RuntimeError('Postmark Return code %d: %s' % (result.code, result.msg))
-    except urllib2.HTTPError as err:
+    except urllib.error.HTTPError as err:
         if err.code == 401:
             raise RuntimeError('Sending Unauthorized - incorrect API key.', err)
         elif err.code == 422:
@@ -123,7 +125,7 @@ def send_mail(message, api_key=None):
             raise PMUnprocessableEntity(desc)
         elif err.code == 500:
             raise RuntimeError('Internal server error at Postmark. Admins have been alerted.', err)
-    except urllib2.URLError as err:
+    except urllib.error.URLError as err:
         if hasattr(err, 'reason'):
             raise RuntimeError(("URLError: Failed to reach the server: %s (See 'inner_exception' for"
                                 " details)") % err.reason, err)

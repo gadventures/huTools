@@ -12,11 +12,15 @@ Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 from __future__ import unicode_literals
 
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import huTools.http.tools
 import gzip
 import os
 import zlib
-import StringIO
+import io
 
 from google.appengine.api.urlfetch import create_rpc, make_fetch_call
 from google.appengine.api import memcache, urlfetch, urlfetch_errors
@@ -164,7 +168,7 @@ def handle_compression(result):
     encoding = result.headers.get('content-encoding', None)
     if encoding in ['gzip', 'deflate']:
         if encoding == 'gzip':
-            result.content = gzip.GzipFile(fileobj=StringIO.StringIO(result.content)).read()
+            result.content = gzip.GzipFile(fileobj=io.StringIO(result.content)).read()
         if encoding == 'deflate':
             result.content = zlib.decompress(result.content)
         result.headers['content-length'] = str(len(result.content))

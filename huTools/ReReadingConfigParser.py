@@ -28,6 +28,8 @@ Bonn, Germany. The twisd AG kindly donated it as Freie Software.
 """
 from __future__ import unicode_literals
 
+from future import standard_library
+standard_library.install_aliases()
 __version__ = '$Id$'
 
 __copyright__ = """(c) 2001 twisd AG, Bonn - http://www.twisd.de/
@@ -36,7 +38,7 @@ MIT Licence."""
 
 __revision__ = "$Revision$"
 
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 import os
 import stat
 

@@ -14,6 +14,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 
+from builtins import str
 from ._jsonlib import UnknownSerializerError
 from . import _jsonlib
 import datetime
@@ -27,7 +28,7 @@ def _unknown_handler(value):
     elif hasattr(value, 'properties') and callable(value.properties):
         properties = value.properties()
         if isinstance(properties, dict):
-            keys = properties.iterkeys()
+            keys = iter(properties.keys())
         else:
             keys = properties
         return dict((key, getattr(value, key)) for key in keys)

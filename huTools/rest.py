@@ -8,10 +8,14 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 """
 from __future__ import unicode_literals
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 from huTools.http import fetch
 import os
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 import simplejson as json
 import warnings
 
@@ -89,7 +93,7 @@ class Client(object):
         headers = {'content-type': 'application/json'}
         path = os.path.join(self.endpoint, build_url(fnc, *args), '')
         if 'params' in kwargs:
-            path = "%s?%s" % (path, urllib.urlencode(kwargs.pop('params')))
+            path = "%s?%s" % (path, urllib.parse.urlencode(kwargs.pop('params')))
 
         if kwargs:
             content = json.dumps(kwargs)
@@ -98,7 +102,7 @@ class Client(object):
             content = None
             method = 'GET'
 
-        url = urlparse.urljoin(self.endpoint, path)
+        url = urllib.parse.urljoin(self.endpoint, path)
         credentials = '%s:%s' % (self.username, self.password)
         status, headers, content = fetch(url, method=method, content=content, headers=headers,
                                          credentials=credentials)

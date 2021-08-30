@@ -8,6 +8,7 @@ Copyright (c) 2010 HUDORA GmbH. All rights reserved.
 """
 from __future__ import unicode_literals
 
+from builtins import str
 import datetime
 import xml.etree.ElementTree as ET
 
@@ -47,7 +48,7 @@ def encode_text(data):
     elif data is None:
         return u''
     else:
-        return unicode(data)
+        return str(data)
 
 
 def add_fields(root, source, fieldnames):

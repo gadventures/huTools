@@ -178,6 +178,6 @@ def json_iterator(url, method='GET', content=None, credentials=None, datanodenam
             tmp = cgi.parse_qs(cursor_information)
             if content is None:
                 content = {}
-            for key, values in tmp.items():
+            for key, values in list(tmp.items()):
                 if key != 'cursor_start':
                     content[key] = values[0]

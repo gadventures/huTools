@@ -8,6 +8,7 @@ Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
 from __future__ import unicode_literals
 
+from builtins import object
 import socket
 import huTools.http.tools
 from huTools.http import exceptions

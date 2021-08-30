@@ -7,7 +7,10 @@ Created by Christian Klein on 2010-04-22.
 Copyright (c) 2010, 2012 HUDORA GmbH. All rights reserved.
 """
 from __future__ import unicode_literals
+from __future__ import division
 
+from past.builtins import basestring
+from past.utils import old_div
 import calendar
 import datetime
 import math
@@ -94,7 +97,7 @@ def get_tertial(date):
     >>> get_tertial(datetime.datetime(2015, 12, 6))
     3
     """
-    return (date.month - 1) / 4 + 1
+    return old_div((date.month - 1), 4) + 1
 
 
 def get_quarter(date):
@@ -126,7 +129,7 @@ def get_quarter(date):
     >>> get_quarter(datetime.datetime(2015, 12, 6))
     4
     """
-    return (date.month - 1) / 3 + 1
+    return old_div((date.month - 1), 3) + 1
 
 
 def get_week(date):
@@ -144,7 +147,7 @@ def get_week(date):
     if first_monday.year < date.year:
         first_monday += datetime.timedelta(weeks=1)
     diff = date_trunc('day', date) - first_monday
-    week = 1 + (diff.days / 7)
+    week = 1 + (old_div(diff.days, 7))
     return week, first_monday.year
 
 

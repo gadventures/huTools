@@ -7,8 +7,10 @@ Created by Maximillian Dornseif on 2010-03-07.
 Copyright (c) 2010, 2011, 2012 HUDORA. All rights reserved.
 """
 from __future__ import unicode_literals
+from __future__ import division
 
 
+from past.utils import old_div
 from huTools.calendar.tools import date_trunc
 
 
@@ -44,10 +46,10 @@ def median(data):
     if data:
         sdata = sorted(data)
         if len(sdata) % 2 == 1:
-            return float(sdata[(len(sdata) + 1) / 2 - 1])
+            return float(sdata[old_div((len(sdata) + 1), 2) - 1])
         else:
-            lower = sdata[len(sdata) / 2 - 1]
-            upper = sdata[len(sdata) / 2]
+            lower = sdata[old_div(len(sdata), 2) - 1]
+            upper = sdata[old_div(len(sdata), 2)]
             return float(lower + upper) / 2
     return 0.0
 
@@ -69,7 +71,7 @@ def robustmax(data):
 def robustdiv(a, b):
     """Like / but handles 0."""
     if b:
-        return a / b
+        return old_div(a, b)
     return 0
 
 
@@ -84,7 +86,7 @@ def _group_by_x(values, aggregationfunc, keyfunc):
         else:
             groupings[key].append(value)
     ret = []
-    for key, values in groupings.items():
+    for key, values in list(groupings.items()):
         ret.append((key, aggregationfunc(values)))
     ret.sort()
     return ret

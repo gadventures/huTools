@@ -8,6 +8,7 @@ Copyright (c) 2007, 2010 HUDORA GmbH. All rights reserved.
 """
 from __future__ import unicode_literals
 
+from past.builtins import basestring
 import unittest
 import datetime
 import time

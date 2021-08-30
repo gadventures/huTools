@@ -58,7 +58,7 @@ COUNTRY_CHOICES = [('DE', u'Deutschland'),
                    ]
 
 
-COUNTRIES = dict(COUNTRY_CHOICES).keys()
+COUNTRIES = list(dict(COUNTRY_CHOICES).keys())
 
 
 # Stand: Juli 2013 - diese MÜSSEN auch in COUNTRY_CHOICES vorkommen.

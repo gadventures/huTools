@@ -21,6 +21,15 @@ The main implementation of this module is accessed through calls to
 """
 from __future__ import absolute_import
 from __future__ import unicode_literals
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import chr
+from builtins import str
+from builtins import next
+from builtins import range
+from builtins import object
+from past.utils import old_div
 __author__ = "John Millikin <jmillikin@gmail.com>"
 __version__ = (1, 6, 1)
 __license__ = "GPL"
@@ -35,7 +44,7 @@ from decimal import Decimal
 import logging
 import re
 import sys
-from UserString import UserString
+from collections import UserString
 
 # Constants {{{
 KEYWORDS = (('null', None), ('true', True), ('false', False))
@@ -46,7 +55,7 @@ except ValueError:
 try:
     NAN = float('nan')
 except ValueError:
-    NAN = INFINITY / INFINITY
+    NAN = old_div(INFINITY, INFINITY)
 
 UNICODE_BOMS = [
         (codecs.BOM_UTF32_BE, 'utf-32-be'),
@@ -98,7 +107,7 @@ WRITE_ESCAPES = {
 
 
 for __char_ord in range(0, 0x20):
-    WRITE_ESCAPES.setdefault(unichr(__char_ord), '\\u%04x' % __char_ord)
+    WRITE_ESCAPES.setdefault(chr(__char_ord), '\\u%04x' % __char_ord)
 
 ALLOWED_WHITESPACE = u'\u0020\u0009\u000A\u000D'
 # }}}
@@ -132,7 +141,7 @@ def unicode_autodetect_encoding(bytestring):
     input is already in unicode, this is a noop.
 
     """
-    if isinstance(bytestring, unicode):
+    if isinstance(bytestring, str):
         return bytestring
 
     # Check for UTF byte order marks in the bytestring
@@ -362,7 +371,7 @@ class Parser(object):
         # Check if it's a UTF-16 surrogate pair
         if not(0xD800 <= first_hex <= 0xDBFF):
             self.index += 4
-            return unichr(first_hex)
+            return chr(first_hex)
 
         second_hex_str = self.text[self.index + 5:self.index + 11]
         if(not(len(second_hex_str) >= 6
@@ -372,14 +381,14 @@ class Parser(object):
 
         second_hex = int(second_hex_str[2:], 16)
         if sys.maxunicode <= 65535:
-            retval = unichr(first_hex) + unichr(second_hex)
+            retval = chr(first_hex) + chr(second_hex)
         else:
             # Convert to 10-bit halves of the 20-bit character
             first_hex -= 0xD800
             second_hex -= 0xDC00
 
             # Merge into 20-bit character
-            retval = unichr((first_hex << 10) + second_hex + 0x10000)
+            retval = chr((first_hex << 10) + second_hex + 0x10000)
         self.index += 10
         return retval
 
@@ -453,7 +462,7 @@ loads = read
 
 # Serializer {{{
 ATOMIC_TYPES = (
-          type(None), bool, int, long, float, complex, Decimal, unicode, str)
+          type(None), bool, int, int, float, complex, Decimal, str, str)
 
 
 def is_iterable(x):
@@ -551,7 +560,7 @@ class Serializer(object):
 
         a = self.append
         first = True
-        items = value.items()
+        items = list(value.items())
         if self.sort_keys:
             items = sorted(items)
 
@@ -561,9 +570,9 @@ class Serializer(object):
         for key, item in items:
             if isinstance(key, UserString):
                 key = key.data
-            if not isinstance(key, (str, unicode)):
+            if not isinstance(key, (str, str)):
                 if self.coerce_keys:
-                    key = unicode(key)
+                    key = str(key)
                 else:
                     self.raise_.invalid_object_key()
             if first:
@@ -606,12 +615,12 @@ class Serializer(object):
             if value is kw_value:
                 return self.append(keyword)
 
-        if isinstance(value, unicode):
+        if isinstance(value, str):
             self.serialize_unicode(value)
         elif isinstance(value, str):
             self.serialize_bytes(value)
-        elif isinstance(value, (int, long)):
-            self.append(unicode(value))
+        elif isinstance(value, (int, int)):
+            self.append(str(value))
         elif isinstance(value, float):
             self.serialize_float(value)
         elif isinstance(value, complex):
@@ -622,7 +631,7 @@ class Serializer(object):
             self.raise_.unknown_serializer(value)
 
     def serialize_bytes(self, value):
-        self.serialize_unicode(unicode(value, 'ascii'))
+        self.serialize_unicode(str(value, 'ascii'))
 
     def serialize_unicode(self, value):
         a = self.append
@@ -688,7 +697,7 @@ class Serializer(object):
     def serialize_decimal(self, value):
         if value != value:
             self.raise_.no_nan()
-        s_value = unicode(value)
+        s_value = str(value)
         if s_value == u'Infinity':
             self.raise_.no_infinity()
         elif s_value == u'-Infinity':
@@ -703,7 +712,7 @@ class StreamSerializer(Serializer):
 
     def append(self, value):
         if isinstance(value, str):
-            value = unicode(value, 'ascii')
+            value = str(value, 'ascii')
         if self.encoding is not None:
             value = value.encode(self.encoding)
         self.fp.write(value)
@@ -823,7 +832,7 @@ dumps = write
 
 def validate_indent(indent):
     if indent is not None:
-        indent = unicode(indent)
+        indent = str(indent)
     if not(indent is None or len(indent) == 0):
         if len(indent.strip(ALLOWED_WHITESPACE)) > 0:
             raise TypeError("Only whitespace may be used for indentation.")

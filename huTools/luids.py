@@ -17,6 +17,10 @@ Created by Maximillian Dornseif on 2006-11-08. BSD Licensed.
 """
 from __future__ import unicode_literals
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
 import base64
 import hashlib
 import os
@@ -26,10 +30,10 @@ import unittest
 import uuid
 
 try:
-    import thread
+    import _thread
     _thread = thread
 except ImportError:
-    import dummy_thread
+    import _dummy_thread
     _thread = dummy_thread
 
 
@@ -61,7 +65,7 @@ def unique_machine32():
     global _counter
     try:  # Entering critical section.
         _counter_lock.acquire()
-        intnow = long(time.time())
+        intnow = int(time.time())
         _counter = (_counter + 1) % 0xff
         # shift more significant bytes of time up so they don't overlap PID
         ret = (os.getpid() ^ (intnow << 16) ^ (intnow >> 16) ^ (_counter << 24)) % 0xffffffff
@@ -93,7 +97,7 @@ def unique_machine64():
     global _counter
     try:  # Entering critical section.
         _counter_lock.acquire()
-        intnow = long(time.time())
+        intnow = int(time.time())
         _counter = (_counter + 1) % 0xffffffff
         ret = ((intnow << 32) ^ (os.getpid() << 16) ^ (_counter)) % 0xffffffffffff
     finally:

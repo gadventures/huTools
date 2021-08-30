@@ -8,7 +8,10 @@ Copyright (c) 2007, 2015 HUDORA GmbH. All rights reserved.
 """
 from __future__ import absolute_import
 from __future__ import unicode_literals
-import cPickle as pickle
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
+import pickle as pickle
 import functools
 import hashlib
 import threading
@@ -67,13 +70,13 @@ class memoize(object):
 
         def flush_cache():
             with self.cache_lock:
-                for key in self.cache.keys():
+                for key in list(self.cache.keys()):
                     if (time.time() - self.cache[key][1]) > self.timeout:
                         del(self.cache[key])
 
         @functools.wraps(fn)
         def wrapped(*args, **kwargs):
-            kw = kwargs.items()
+            kw = list(kwargs.items())
             kw.sort()
             key_str = repr((args, kw))
             key = hashlib.md5(key_str).hexdigest()

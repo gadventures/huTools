@@ -9,6 +9,8 @@ Copyright (c) 2009 HUDORA. All rights reserved.
 from __future__ import unicode_literals
 
 
+from builtins import str
+from builtins import range
 import os
 import os.path
 import sys

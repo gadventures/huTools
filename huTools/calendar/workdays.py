@@ -7,7 +7,10 @@ Created by Christian Klein on 2006-11-28. Fiddeled with by Maximillian Dornseif.
 BSD Licensed.
 """
 from __future__ import unicode_literals
+from __future__ import division
 
+from builtins import range
+from past.utils import old_div
 import datetime
 import doctest
 import unittest
@@ -34,12 +37,12 @@ def easter(year):
     """Returns the day of Easter sunday for 'year'.
     This function only works betweeen 1900 and 2099"""
     h = (24 + 19 * (year % 19)) % 30
-    i = h - (h / 28)
-    j = (year + (year / 4) + i - 13) % 7
+    i = h - (old_div(h, 28))
+    j = (year + (old_div(year, 4)) + i - 13) % 7
     l = i - j
 
-    easter_month = 3 + ((l + 40) / 44)
-    easter_day = l + 28 - 31 * (easter_month / 4)
+    easter_month = 3 + (old_div((l + 40), 44))
+    easter_day = l + 28 - 31 * (old_div(easter_month, 4))
 
     return (easter_month, easter_day)
 
@@ -115,7 +118,7 @@ def _workdays(start, end):
     # Count weekends:
     # if weekday start < weekday end: n / 7
     # if weekday start > weekday end: (n / 7) + 1
-    number_of_weekends = days / 7
+    number_of_weekends = old_div(days, 7)
     if start.isoweekday() > end.isoweekday():
         number_of_weekends += 1
     days = days - 2 * number_of_weekends

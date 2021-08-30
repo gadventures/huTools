@@ -9,11 +9,13 @@ Copyright (c) 2010 HUDORA. All rights reserved.
 
 from __future__ import with_statement
 from __future__ import unicode_literals
+from future import standard_library
+standard_library.install_aliases()
 import huTools.http
 import huTools.hujson2 as json
 import mimetypes
 import os
-import urlparse
+import urllib.parse
 import xml.etree.ElementTree as ET
 
 
@@ -33,9 +35,9 @@ def build_url(endpoint, queuename, guid=None):
     'http://example.com/q/45054/'
     """
 
-    url = urlparse.urljoin(endpoint, queuename + '/')
+    url = urllib.parse.urljoin(endpoint, queuename + '/')
     if guid:
-        url = urlparse.urljoin(url, guid + '/')
+        url = urllib.parse.urljoin(url, guid + '/')
     return url
 
 

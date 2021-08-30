@@ -59,12 +59,16 @@
 """
 from __future__ import unicode_literals
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import map
+from builtins import object
 import os
 import re
 import hashlib
-from itertools import izip
+
 from time import time
-from cPickle import loads, dumps, HIGHEST_PROTOCOL
+from pickle import loads, dumps, HIGHEST_PROTOCOL
 
 
 class BaseCache(object):
@@ -106,7 +110,7 @@ class BaseCache(object):
         :param keys: The function accepts multiple keys as positional
                      arguments.
         """
-        return map(self.get, keys)
+        return list(map(self.get, keys))
 
     def get_dict(self, *keys):
         """Works like :meth:`get_many` but returns a dict::
@@ -118,7 +122,7 @@ class BaseCache(object):
         :param keys: The function accepts multiple keys as positional
                      arguments.
         """
-        return dict(izip(keys, self.get_many(*keys)))
+        return dict(zip(keys, self.get_many(*keys)))
 
     def set(self, key, value, timeout=None):
         """Adds a new key/value to the cache (overwrites value, if key already
@@ -149,7 +153,7 @@ class BaseCache(object):
         :param timeout: the cache timeout for the key (if not specified,
                         it uses the default timeout).
         """
-        for key, value in mapping.iteritems():
+        for key, value in mapping.items():
             self.set(key, value, timeout)
 
     def delete_many(self, *keys):
@@ -303,7 +307,7 @@ class MemcachedCache(BaseCache):
             # cmemcache has a bug that debuglog is not defined for the
             # client.  Whenever pickle fails you get a weird AttributeError.
             if is_cmemcache:
-                client = memcache.Client(map(str, servers))
+                client = memcache.Client(list(map(str, servers)))
                 try:
                     client.debuglog = lambda *a: None
                 except:
@@ -320,7 +324,7 @@ class MemcachedCache(BaseCache):
         self.key_prefix = key_prefix
 
     def get(self, key):
-        if isinstance(key, unicode):
+        if isinstance(key, str):
             key = key.encode('utf-8')
         if self.key_prefix:
             key = self.key_prefix + key
@@ -334,7 +338,7 @@ class MemcachedCache(BaseCache):
         key_mapping = {}
         have_encoded_keys = False
         for idx, key in enumerate(keys):
-            if isinstance(key, unicode):
+            if isinstance(key, str):
                 encoded_key = key.encode('utf-8')
                 have_encoded_keys = True
             else:
@@ -346,10 +350,10 @@ class MemcachedCache(BaseCache):
         # the keys call here is important because otherwise cmemcache
         # does ugly things.  What exactly I don't know, I think it does
         # Py_DECREF but quite frankly I don't care.
-        d = rv = self._client.get_multi(key_mapping.keys())
+        d = rv = self._client.get_multi(list(key_mapping.keys()))
         if have_encoded_keys or self.key_prefix:
             rv = {}
-            for key, value in d.iteritems():
+            for key, value in d.items():
                 rv[key_mapping[key]] = value
         if len(rv) < len(keys):
             for key in keys:
@@ -360,7 +364,7 @@ class MemcachedCache(BaseCache):
     def add(self, key, value, timeout=None):
         if timeout is None:
             timeout = self.default_timeout
-        if isinstance(key, unicode):
+        if isinstance(key, str):
             key = key.encode('utf-8')
         if self.key_prefix:
             key = self.key_prefix + key
@@ -369,7 +373,7 @@ class MemcachedCache(BaseCache):
     def set(self, key, value, timeout=None):
         if timeout is None:
             timeout = self.default_timeout
-        if isinstance(key, unicode):
+        if isinstance(key, str):
             key = key.encode('utf-8')
         if self.key_prefix:
             key = self.key_prefix + key
@@ -383,8 +387,8 @@ class MemcachedCache(BaseCache):
         if timeout is None:
             timeout = self.default_timeout
         new_mapping = {}
-        for key, value in mapping.iteritems():
-            if isinstance(key, unicode):
+        for key, value in mapping.items():
+            if isinstance(key, str):
                 key = key.encode('utf-8')
             if self.key_prefix:
                 key = self.key_prefix + key
@@ -392,7 +396,7 @@ class MemcachedCache(BaseCache):
         self._client.set_multi(new_mapping, timeout)
 
     def delete(self, key):
-        if isinstance(key, unicode):
+        if isinstance(key, str):
             key = key.encode('utf-8')
         if self.key_prefix:
             key = self.key_prefix + key
@@ -402,7 +406,7 @@ class MemcachedCache(BaseCache):
     def delete_many(self, *keys):
         new_keys = []
         for key in keys:
-            if isinstance(key, unicode):
+            if isinstance(key, str):
                 key = key.encode('utf-8')
             if self.key_prefix:
                 key = self.key_prefix + key
@@ -414,14 +418,14 @@ class MemcachedCache(BaseCache):
         self._client.flush_all()
 
     def inc(self, key, delta=1):
-        if isinstance(key, unicode):
+        if isinstance(key, str):
             key = key.encode('utf-8')
         if self.key_prefix:
             key = self.key_prefix + key
         self._client.incr(key, delta)
 
     def dec(self, key, delta=1):
-        if isinstance(key, unicode):
+        if isinstance(key, str):
             key = key.encode('utf-8')
         if self.key_prefix:
             key = self.key_prefix + key

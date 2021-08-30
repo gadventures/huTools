@@ -7,6 +7,7 @@ Created by Maximillian Dornseif on 2006-11-19. BSD Licensed.
 """
 from __future__ import unicode_literals
 
+from builtins import str
 import os
 import os.path
 import subprocess

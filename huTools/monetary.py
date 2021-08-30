@@ -7,7 +7,10 @@ Created by Christian Klein on 2010-03-25.
 Copyright (c) 2010 Christian Klein. All rights reserved.
 """
 from __future__ import unicode_literals
+from __future__ import division
 
+from builtins import str
+from past.utils import old_div
 import decimal
 
 
@@ -27,7 +30,7 @@ def cent_to_euro(amount):
     Decimal('0.00')
     """
 
-    value = decimal.Decimal(amount) / 100
+    value = old_div(decimal.Decimal(amount), 100)
     return value.quantize(decimal.Decimal('0.01'), rounding=decimal.ROUND_HALF_DOWN)
 
 
@@ -68,7 +71,7 @@ def netto(amount, tax=19):
     if tax >= 100:
         raise ValueError('tax must not be greater than 100%')
 
-    percent = amount / (decimal.Decimal(100) + tax)
+    percent = old_div(amount, (decimal.Decimal(100) + tax))
     amount = percent * 100
     return amount.quantize(decimal.Decimal('0.01'), rounding=decimal.ROUND_HALF_DOWN)
 
@@ -90,7 +93,7 @@ def brutto(amount, tax=19):
     if tax >= 100:
         raise ValueError("tax must not be greater than 100%")
 
-    percent = amount / decimal.Decimal(100)
+    percent = old_div(amount, decimal.Decimal(100))
     amount = percent * (100 + tax)
     return amount.quantize(decimal.Decimal('0.01'), rounding=decimal.ROUND_HALF_DOWN)
 
@@ -119,7 +122,7 @@ def spanne(verkaufspreis, selbstkosten, tax=19):
     verkaufspreis = decimal.Decimal(str(verkaufspreis))
     selbstkosten = decimal.Decimal(str(selbstkosten))
     nettopreis = netto(verkaufspreis, tax=tax)
-    return (nettopreis - selbstkosten) / nettopreis
+    return old_div((nettopreis - selbstkosten), nettopreis)
 
 
 if __name__ == "__main__":

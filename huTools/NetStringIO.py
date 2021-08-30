@@ -18,6 +18,9 @@ Bonn, Germany. The twisd AG kindly donated it as Freie Software.
 from __future__ import print_function
 from __future__ import unicode_literals
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 __version__ = '$Id: NetStringIO.py,v 1.5 2001/05/03 22:05:57 drt Exp$'
 
 __copyright__ = """(c) 2001 twisd AG, Bonn - http://www.twisd.de/
@@ -36,7 +39,7 @@ MIT Licence."""
 import string
 
 
-class NetStringIO:
+class NetStringIO(object):
     """Warping arround a file object changing all I/O to netstrings.
 
     I use this class to warp it arround filehandles obtained by a call
@@ -140,18 +143,18 @@ class NetStringIO:
 def test():
     """A little test suite."""
 
-    import StringIO
+    import io
 
     testtext = 'Netstrings rule'
-    inf = StringIO.StringIO()
-    outf = StringIO.StringIO()
+    inf = io.StringIO()
+    outf = io.StringIO()
 
     print("Writing a Netstring ... ", end=' ')
     f = NetStringIO(outf)
     f.write(testtext)
     print(outf.getvalue(), end=' ')
 
-    inf = StringIO.StringIO(outf.getvalue())
+    inf = io.StringIO(outf.getvalue())
     f.close()
 
     print("Reading this Netstring ... ", end=' ')

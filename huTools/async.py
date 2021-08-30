@@ -9,6 +9,8 @@ parts based on http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/84317
 """
 from __future__ import unicode_literals
 
+from builtins import hex
+from builtins import object
 from future.utils import raise_
 import copy
 import logging
@@ -17,7 +19,7 @@ import time
 import threading
 
 
-class Future:
+class Future(object):
     """This calls a function in a separate thread and returns a function waiting for that thread to finish.
 
     Typical use:

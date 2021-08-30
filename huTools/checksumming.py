@@ -15,6 +15,9 @@ from __future__ import unicode_literals
 # by checking the javascript at
 # http://www.gs1.org/productssolutions/barcodes/support/check_digit_calculator.html
 
+from builtins import chr
+from builtins import str
+from builtins import range
 __revision__ = "$Revision$"
 
 import re

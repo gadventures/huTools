@@ -8,10 +8,18 @@ Copyright (c) 2010, 2011 HUDORA. All rights reserved.
 """
 from __future__ import absolute_import
 from __future__ import unicode_literals
+from future import standard_library
+standard_library.install_aliases()
+from builtins import zip
+from builtins import map
+from builtins import chr
+from builtins import str
+from builtins import range
+from past.builtins import basestring
 import base64
 from . import poster_encode
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 
 
 # quoting based on
@@ -21,7 +29,7 @@ always_safe = ('ABCDEFGHIJKLMNOPQRSTUVWXYZ'
                'abcdefghijklmnopqrstuvwxyz'
                '0123456789' '_.-')
 _safe_map = {}
-for i, c in zip(xrange(256), [chr(x) for x in xrange(256)]):
+for i, c in zip(range(256), [chr(x) for x in range(256)]):
     _safe_map[c] = c if (i < 128 and c in always_safe) else ('%%%02X' % i)
 _safe_quoters = {}
 
@@ -58,13 +66,13 @@ def quote(s, safe='/', encoding=None, errors=None):
     if not s:
         return s
 
-    if encoding is not None or isinstance(s, unicode):
+    if encoding is not None or isinstance(s, str):
         if encoding is None:
             encoding = 'utf-8'
         if errors is None:
             errors = 'strict'
         s = s.encode(encoding, errors)
-    if isinstance(safe, unicode):
+    if isinstance(safe, str):
         # Normalize 'safe' by converting to str and removing non-ASCII chars
         safe = safe.encode('ascii', 'ignore')
 
@@ -100,7 +108,7 @@ def urlencode(query):
 
     if hasattr(query, 'items'):
         # mapping objects
-        query = query.items()
+        query = list(query.items())
     l = []
     for k, v in query:
         k = quote_plus(k)
@@ -108,7 +116,7 @@ def urlencode(query):
             v = quote_plus(v)
             l.append(k + '=' + v)
         else:
-            v = quote_plus(unicode(v))
+            v = quote_plus(str(v))
             l.append(k + '=' + v)
     return '&'.join(l)
 
@@ -125,11 +133,11 @@ def add_query(url, params):
     '/sicrit/test.html?hello=world&passphrase=fiftyseven&passphrase=eleven'
     """
 
-    url_parts = list(urlparse.urlparse(url))
-    query = dict(urlparse.parse_qsl(url_parts[4]))
+    url_parts = list(urllib.parse.urlparse(url))
+    query = dict(urllib.parse.parse_qsl(url_parts[4]))
     query.update(params)
-    url_parts[4] = urllib.urlencode(query, doseq=1)
-    return urlparse.urlunparse(url_parts)
+    url_parts[4] = urllib.parse.urlencode(query, doseq=1)
+    return urllib.parse.urlunparse(url_parts)
 
 
 def prepare_headers(url, content='', method='GET', credentials=None, headers=None, multipart=False, ua='',
@@ -144,7 +152,7 @@ def prepare_headers(url, content='', method='GET', credentials=None, headers=Non
         if hasattr(content, 'items'):
             # we assume content is a dict which needs to be encoded
             # decide to use multipart/form-data encoding or application/x-www-form-urlencoded
-            for val in content.values():
+            for val in list(content.values()):
                 if hasattr(val, 'read'):  # file() or StringIO()
                     multipart = True
                     break
@@ -158,17 +166,17 @@ def prepare_headers(url, content='', method='GET', credentials=None, headers=Non
     else:
         # url parmater encoding
         if hasattr(content, 'items'):
-            scheme, netloc, path, params, query, fragment = urlparse.urlparse(url)
-            qdict = urlparse.parse_qs(query)
+            scheme, netloc, path, params, query, fragment = urllib.parse.urlparse(url)
+            qdict = urllib.parse.parse_qs(query)
             # ugly Unicode issues, see http://bugs.python.org/issue1712522
             qdict.update(content)
             query = urlencode(qdict)
-            url = urlparse.urlunparse((scheme, netloc, path, params, query, fragment))
+            url = urllib.parse.urlunparse((scheme, netloc, path, params, query, fragment))
             content = ''
     # convert all header values to strings (what about unicode?)
-    for key, val in myheaders.items():
+    for key, val in list(myheaders.items()):
         myheaders[key] = str(val)
     # add authentication
-    if credentials and not 'Authorization' in myheaders.keys():
+    if credentials and not 'Authorization' in list(myheaders.keys()):
         myheaders["Authorization"] = 'Basic %s' % base64.b64encode(credentials)
     return url, method, content, myheaders, timeout, caching

@@ -9,6 +9,7 @@ Created by Maximillian Dornseif on 2010-09-10.
 Copyright (c) 2010, 2012, 2013 HUDORA. All rights reserved.
 """
 from __future__ import unicode_literals
+from builtins import str
 import datetime
 import decimal
 import json
@@ -21,7 +22,7 @@ def _unknown_handler(value):
     elif isinstance(value, datetime.datetime):
         return value.isoformat() + 'Z'
     elif isinstance(value, decimal.Decimal):
-        return unicode(value)
+        return str(value)
     elif hasattr(value, 'dict_mit_positionen') and callable(value.dict_mit_positionen):
         # helpful for our internal data-modelling
         return value.dict_mit_positionen()
@@ -32,7 +33,7 @@ def _unknown_handler(value):
     elif hasattr(value, 'properties') and callable(value.properties):
         properties = value.properties()
         if isinstance(properties, dict):
-            keys = (key for (key, datatype) in properties.iteritems()
+            keys = (key for (key, datatype) in properties.items()
                 if datatype.__class__.__name__ not in ['BlobProperty'])
         elif isinstance(properties, (set, list)):
             keys = properties
@@ -58,7 +59,7 @@ def _unknown_handler(value):
     # for Google AppEngine `ndb`
     elif (hasattr(value, '_properties') and hasattr(value._properties, 'items')
         and callable(value._properties.items)):
-            return dict([(k, v._get_value(value)) for k, v in value._properties.items()])
+            return dict([(k, v._get_value(value)) for k, v in list(value._properties.items())])
     elif hasattr(value, 'urlsafe') and callable(value.urlsafe):
         return str(value.urlsafe())
     #elif hasattr(value, '_get_value') and callable(value._get_value):

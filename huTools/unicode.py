@@ -42,7 +42,7 @@ def deUmlaut(data):
     '1 Ueber Huegel sass Rene aeoeueAeOeUess'
     """
 
-    for to_char, from_chars in _recodings.items():
+    for to_char, from_chars in list(_recodings.items()):
         for from_char in from_chars:
             try:
                 data = data.replace(from_char, to_char)

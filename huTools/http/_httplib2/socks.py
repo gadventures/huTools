@@ -41,6 +41,9 @@ mainly to merge bug fixes found in Sourceforge
 """
 from __future__ import unicode_literals
 
+from builtins import str
+from builtins import chr
+from past.builtins import basestring
 import base64
 import socket
 import struct

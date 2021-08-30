@@ -8,9 +8,14 @@ Copyright (c) 2009-2011, 2015 HUDORA. All rights reserved.
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from past.builtins import basestring
+from builtins import object
 import csv
 import xml.etree.cElementTree as ET
-from StringIO import StringIO
+from io import StringIO
 
 
 # Basic conversation goal here is converting a dict to an object allowing
@@ -24,7 +29,7 @@ class Struct(object):
     """Emulate a cross over between a dict() and an object()."""
     def __init__(self, entries, default=None, nodefault=False):
         # ensure all keys are strings and nothing else
-        entries = dict([(str(x), y) for x, y in entries.items()])
+        entries = dict([(str(x), y) for x, y in list(entries.items())])
         self.__dict__.update(entries)
         self.__default = default
         self.__nodefault = default is not None or nodefault
@@ -100,9 +105,9 @@ class Struct(object):
         """
         return item in self.__dict__
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Returns whether the instance evaluates to False"""
-        return bool(self.items())
+        return bool(list(self.items()))
 
     def has_key(self, item):
         """Emulate dict.has_key() functionality.
@@ -122,7 +127,7 @@ class Struct(object):
         >>> obj.items()
         [('a', 'b')]
         """
-        return [(k, v) for (k, v) in self.__dict__.items() if not k.startswith('_Struct__')]
+        return [(k, v) for (k, v) in list(self.__dict__.items()) if not k.startswith('_Struct__')]
 
     def keys(self):
         """Emulate dict.keys() functionality.
@@ -131,7 +136,7 @@ class Struct(object):
         >>> obj.keys()
         ['a']
         """
-        return [k for (k, _v) in self.__dict__.items() if not k.startswith('_Struct__')]
+        return [k for (k, _v) in list(self.__dict__.items()) if not k.startswith('_Struct__')]
 
     def values(self):
         """Emulate dict.values() functionality.
@@ -140,10 +145,10 @@ class Struct(object):
         >>> obj.values()
         ['b']
         """
-        return [v for (k, v) in self.__dict__.items() if not k.startswith('_Struct__')]
+        return [v for (k, v) in list(self.__dict__.items()) if not k.startswith('_Struct__')]
 
     def __repr__(self):
-        return "<Struct: %r>" % dict(self.items())
+        return "<Struct: %r>" % dict(list(self.items()))
 
     def as_dict(self):
         """Return a dict representing the content of this struct."""
@@ -199,8 +204,8 @@ def make_struct(obj, default=None, nodefault=False):
         # this should be a dict
         struc = Struct(obj, default, nodefault)
         # handle recursive sub-dicts and lists
-        for key, val in obj.iteritems():
-            if isinstance(val, (basestring, int, long)):
+        for key, val in obj.items():
+            if isinstance(val, (basestring, int, int)):
                 # optimisation saving a function call
                 setattr(struc, key, val)
             else:
@@ -210,7 +215,7 @@ def make_struct(obj, default=None, nodefault=False):
         # a list
         ret = []
         for val in obj:
-            if isinstance(val, (basestring, int, long)):
+            if isinstance(val, (basestring, int, int)):
                 # optimisation saving a function call
                 ret.append(val)
             else:
@@ -228,7 +233,7 @@ def _convert_dict_to_xml_recurse(parent, dictitem, listnames, sort=True):
         raise TypeError('Unable to convert bare lists')
 
     if isinstance(dictitem, dict):
-        items = dictitem.iteritems()
+        items = iter(dictitem.items())
         if sort:
             items = sorted(items)
         for (tag, child) in items:
@@ -255,7 +260,7 @@ def _convert_dict_to_xml_recurse(parent, dictitem, listnames, sort=True):
                     parent.append(elem)
                     _convert_dict_to_xml_recurse(elem, child, listnames, sort=sort)
     elif not dictitem is None:
-        parent.text = unicode(dictitem)
+        parent.text = str(dictitem)
 
 
 def dict2et(xmldict, roottag='data', listnames=None, sort=True):
@@ -375,14 +380,14 @@ def dict2tabular(items, fieldorder=None):
     if not fieldorder:
         fieldorder = []
     allfieldnames = set()
-    for item in items.values():
-        allfieldnames.update(item.keys())
+    for item in list(items.values()):
+        allfieldnames.update(list(item.keys()))
     for fielname in fieldorder:
         allfieldnames.remove(fielname)
     fieldorder = fieldorder + list(sorted(allfieldnames))
     ret = []
     ret.append(fieldorder)
-    for item in items.values():
+    for item in list(items.values()):
         ret.append([item.get(key, '') for key in fieldorder])
     return ret
 
@@ -393,7 +398,7 @@ def list2tabular(items, fieldorder=None):
         fieldorder = []
     allfieldnames = set()
     for item in items:
-        allfieldnames.update(item.keys())
+        allfieldnames.update(list(item.keys()))
     for fielname in fieldorder:
         allfieldnames.remove(fielname)
     fieldorder = fieldorder + list(sorted(allfieldnames))
@@ -414,7 +419,7 @@ def list2csv(datalist):
     data = x2tabular(datalist)
     fileobj = StringIO()
     csvwriter = csv.writer(fileobj, dialect='excel', delimiter='\t')
-    fixer = lambda row: [unicode(x).encode('utf-8') for x in row]
+    fixer = lambda row: [str(x).encode('utf-8') for x in row]
     for row in data:
         csvwriter.writerow(fixer(row))
     return fileobj.getvalue()
