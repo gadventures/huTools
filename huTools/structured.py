@@ -369,9 +369,9 @@ def to_string(root, encoding='utf-8', pretty=False):
 
     tree = ET.ElementTree(root)
     fileobj = BytesIO()
-    fileobj.write(six.ensure_bytes('<?xml version="1.0" encoding="%s"?>' % encoding, encoding=encoding)
+    fileobj.write(six.ensure_bytes('<?xml version="1.0" encoding="%s"?>' % encoding, encoding=encoding))
     if pretty:
-        fileobj.write('\n')
+        fileobj.write(six.ensure_bytes('\n', encoding=encoding))
     tree.write(fileobj, encoding)
     return fileobj.getvalue()
 
