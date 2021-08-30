@@ -1,7 +1,7 @@
 
 from distutils.core import setup
 
-version = '0.65'
+version = '0.70.0'
 
 setup(
     name='huTools',
@@ -27,6 +27,7 @@ setup(
     zip_safe=False,
     install_requires=[
         # -*- Install requires: -*-
+        'six',
         'setuptools',
         'decorator'
     ],

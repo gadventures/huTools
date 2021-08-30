@@ -15,7 +15,8 @@ from past.builtins import basestring
 from builtins import object
 import csv
 import xml.etree.cElementTree as ET
-from io import StringIO
+from six.moves import BytesIO
+import six
 
 
 # Basic conversation goal here is converting a dict to an object allowing
@@ -367,11 +368,11 @@ def to_string(root, encoding='utf-8', pretty=False):
         indent(root)
 
     tree = ET.ElementTree(root)
-    fileobj = StringIO()
-    fileobj.write('<?xml version="1.0" encoding="%s"?>' % encoding)
+    fileobj = BytesIO()
+    fileobj.write(six.ensure_bytes('<?xml version="1.0" encoding="%s"?>' % encoding, encoding=encoding)
     if pretty:
         fileobj.write('\n')
-    tree.write(fileobj, 'utf-8')
+    tree.write(fileobj, encoding)
     return fileobj.getvalue()
 
 
@@ -417,7 +418,7 @@ def x2tabular(datalist):
 def list2csv(datalist):
     """Export a list of dicts to CSV."""
     data = x2tabular(datalist)
-    fileobj = StringIO()
+    fileobj = BytesIO()
     csvwriter = csv.writer(fileobj, dialect='excel', delimiter='\t')
     fixer = lambda row: [str(x).encode('utf-8') for x in row]
     for row in data:
